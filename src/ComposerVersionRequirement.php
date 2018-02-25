@@ -9,6 +9,7 @@ use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Composer\Semver\Semver;
+use Deviantintegral\ComposerGavel\Exception\ConstraintException;
 
 class ComposerVersionRequirement implements PluginInterface, EventSubscriberInterface {
 
@@ -31,7 +32,6 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
   public function activate(Composer $composer, IOInterface $io) {
     $this->composer = $composer;
     $this->io = $io;
-    $io->write('Here');
   }
 
   /**
@@ -61,11 +61,25 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
 
   public function checkComposerVersion(Event $event) {
     $version = $this->composer::VERSION;
-    $constraint = $this->composer->getConfig()->get('composer-version');
+    $extra = $this->composer->getPackage()->getExtra();
 
-    if (!Semver::satisfies($version, $constraint)) {
-      throw new \RuntimeException(sprintf('Composer %s is in use but this project requires Composer %s. Upgrade composer by running composer self-update'));
+    $validator = function($answer) {
+      return $answer === 'Y' || $answer === 'y';
+    };
+
+    if (empty($extra['composer-version'])) {
+      $this->io->askAndValidate(sprintf('No composer-version key is defined in the composer.json config. Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, null, 'Y');
+      $extra['composer-version'] = "^$version";
+      $this->composer->getPackage()->setExtra($extra);
+      // Write the new composer.json.
     }
+
+    $constraint = $extra['composer-version'];
+    if (!Semver::satisfies($version, $constraint)) {
+      throw new ConstraintException(sprintf('Composer %s is in use but this project requires Composer %s. Upgrade composer by running composer self-update.', $version, $constraint));
+    }
+
+    $this->io->write(sprintf('Composer %s satisfies composer-version %s.', $version, $constraint));
   }
 
 }
