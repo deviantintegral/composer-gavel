@@ -77,7 +77,8 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
 
     // See if this can be done during the initial plugin install.
     if (empty($extra['composer-version'])) {
-      if (!($this->io->askAndValidate(sprintf('No composer-version key is defined in the composer.json config. Set the Composer version constraint to %s? [y/N] ', "^$version"), $validator, NULL, FALSE))) {
+      if ($event->getName() == ScriptEvents::PRE_INSTALL_CMD || !($this->io->askAndValidate(sprintf('No composer-version key is defined in the composer.json config. Set the Composer version constraint to %s? [y/N] ', "^$version"), $validator, NULL, FALSE))) {
+        $this->io->writeError('<info>All composer versions are allowed.</info>');
         return;
       }
 
