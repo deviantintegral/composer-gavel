@@ -9,5 +9,17 @@
             "email": "deviantintegral@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=7.0.0",
+        "composer-plugin-api": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {"Deviantintegral\\ComposerGavel\\": "src"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Deviantintegral\\ComposerGavel\\Tests\\": "tests"}
+    },
+    "extra": {
+        "class": "Deviantintegral\\ComposerGavel"
+    }
 }
