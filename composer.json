@@ -23,6 +23,6 @@
         "psr-4": {"Deviantintegral\\ComposerGavel\\Tests\\": "tests"}
     },
     "extra": {
-        "class": "Deviantintegral\\ComposerGavel"
+        "class": "Deviantintegral\\ComposerGavel\\ComposerVersionRequirement"
     }
 }
