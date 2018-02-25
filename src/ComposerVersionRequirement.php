@@ -67,16 +67,23 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
     $extra = $this->composer->getPackage()->getExtra();
 
     $validator = function($answer) {
-      return $answer === 'Y' || $answer === 'y';
+      $normalized = strtolower($answer);
+      if (!in_array($normalized, ['y', 'n'])) {
+        throw new \RuntimeException("Enter 'y' or 'n'");
+      }
+
+      return $normalized == 'y';
     };
 
     // See if this can be done during the initial plugin install.
     if (empty($extra['composer-version'])) {
-      $this->io->askAndValidate(sprintf('No composer-version key is defined in the composer.json config. Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, null, 'Y');
+      if (!($this->io->askAndValidate(sprintf('No composer-version key is defined in the composer.json config. Set the Composer version constraint to %s? [y/N] ', "^$version"), $validator, NULL, FALSE))) {
+        return;
+      }
+
       $extra['composer-version'] = "^$version";
       $this->composer->getPackage()->setExtra($extra);
-      // Write the new composer.json.
-      $this->setConstraint($extra['composer-version']);
+      $this->writeConstraint($extra['composer-version']);
     }
 
     $constraint = $extra['composer-version'];
@@ -87,17 +94,13 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
     $this->io->writeError(sprintf('<info>Composer %s satisfies composer-version %s.</info>', $version, $constraint));
   }
 
-  protected function setConstraint($constraint) {
+  protected function writeConstraint($constraint) {
     $file = Factory::getComposerFile();
     if (!is_readable($file)) {
-      $this->io->writeError('<error>'.$file.' is not readable.</error>');
-
-      return 1;
+      throw new \RuntimeException(sprintf('%s is not readable.', $file));
     }
     if (!is_writable($file)) {
-      $this->io->writeError('<error>'.$file.' is not writable.</error>');
-
-      return 1;
+      throw new \RuntimeException(sprintf('%s is not writable.', $file));
     }
 
     $json = new JsonFile($file);
