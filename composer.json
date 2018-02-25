@@ -1,0 +1,13 @@
+{
+    "name": "deviantintegral/composer-gavel",
+    "description": "Enforce a minimum Composer version for your team",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew Berry",
+            "email": "deviantintegral@gmail.com"
+        }
+    ],
+    "require": {}
+}
