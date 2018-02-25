@@ -4,7 +4,10 @@ namespace Deviantintegral\ComposerGavel;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Factory;
 use Composer\IO\IOInterface;
+use Composer\Json\JsonFile;
+use Composer\Json\JsonManipulator;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
@@ -67,11 +70,13 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
       return $answer === 'Y' || $answer === 'y';
     };
 
+    // See if this can be done during the initial plugin install.
     if (empty($extra['composer-version'])) {
       $this->io->askAndValidate(sprintf('No composer-version key is defined in the composer.json config. Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, null, 'Y');
       $extra['composer-version'] = "^$version";
       $this->composer->getPackage()->setExtra($extra);
       // Write the new composer.json.
+      $this->setConstraint($extra['composer-version']);
     }
 
     $constraint = $extra['composer-version'];
@@ -79,7 +84,31 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
       throw new ConstraintException(sprintf('Composer %s is in use but this project requires Composer %s. Upgrade composer by running composer self-update.', $version, $constraint));
     }
 
-    $this->io->write(sprintf('Composer %s satisfies composer-version %s.', $version, $constraint));
+    $this->io->writeError(sprintf('<info>Composer %s satisfies composer-version %s.</info>', $version, $constraint));
+  }
+
+  protected function setConstraint($constraint) {
+    $file = Factory::getComposerFile();
+    if (!is_readable($file)) {
+      $this->io->writeError('<error>'.$file.' is not readable.</error>');
+
+      return 1;
+    }
+    if (!is_writable($file)) {
+      $this->io->writeError('<error>'.$file.' is not writable.</error>');
+
+      return 1;
+    }
+
+    $json = new JsonFile($file);
+    $contents = file_get_contents($json->getPath());
+
+    $manipulator = new JsonManipulator($contents);
+    $manipulator->addProperty('extra.composer-version', $constraint);
+
+    file_put_contents($json->getPath(), $manipulator->getContents());
+
+    $this->io->writeError(sprintf('<info>Composer requirement set to %s.</info>', $constraint));
   }
 
 }
