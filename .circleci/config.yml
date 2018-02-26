@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: php:7.2-alpine
+      - image: php:7.2
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -27,7 +27,7 @@ jobs:
           - v1-dependencies-
 
       - run: |
-          EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
+          EXPECTED_SIGNATURE=$(curl -L https://composer.github.io/installer.sig)
           php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
           ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');")
 
@@ -42,10 +42,17 @@ jobs:
 
       - run: composer install -n --prefer-dist
 
+      - run: |
+          [ -f /usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so ] || pecl install xdebug
+          echo 'zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so' > /usr/local/etc/php/conf.d/xdebug.ini
+
       - save_cache:
           paths:
             - ./vendor
-          key: v1-dependencies-{{ checksum "composer.json" }}
+            - /usr/local/lib/php/extensions/no-debug-non-zts-20170718
+            - /usr/local/etc/php/conf.d/xdebug.ini
+
+          key: v1-dependencies-{{ checksum "composer.json" }}--{{ checksum ".circleci/config.yml" }}
         
       # run tests!
       - run: |
@@ -55,5 +62,5 @@ jobs:
       - store_test_results:
           path: test-results
 
-      - run: vendor/bin/php-coveralls
+      - run: vendor/bin/php-coveralls -x test-results/clover.xml
 
