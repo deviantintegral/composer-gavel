@@ -138,4 +138,38 @@ class ComposerVersionRequirementTest extends TestCase {
     $composerJson = new JsonFile($this->composerJsonFile);
     $this->assertEquals(['extra' => $extra], $composerJson->read());
   }
+
+  /**
+   * @covers ::validate
+   */
+  public function testValidate() {
+    $vr = new ComposerVersionRequirement();
+    $validator = $vr->validate();
+    $this->assertTrue($validator('Y'));
+    $this->assertTrue($validator('y'));
+    $this->assertTrue($validator("\n"));
+  }
+
+  /**
+   * @covers ::validate
+   */
+  public function testValidateFalse() {
+    $vr = new ComposerVersionRequirement();
+    $validator = $vr->validate();
+    $this->assertFalse($validator('N'));
+    $this->assertFalse($validator('n'));
+    $this->assertFalse($validator(''));
+  }
+
+  /**
+   * @covers ::validate
+   */
+  public function testValidateInvalid() {
+    $vr = new ComposerVersionRequirement();
+    $validator = $vr->validate();
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage("Enter 'y' or 'n'");
+    $validator('invalid');
+  }
+
 }
