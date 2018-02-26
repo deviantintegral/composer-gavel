@@ -55,5 +55,5 @@ jobs:
       - store_test_results:
           path: test-results
 
-      - run: vendor/bin/coveralls
+      - run: vendor/bin/php-coveralls
 
