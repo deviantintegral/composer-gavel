@@ -54,16 +54,6 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
     $version = $this->composer::VERSION;
     $extra = $this->composer->getPackage()->getExtra();
 
-    // Validate y, n, and a newline as Y.
-    $validator = function($answer) {
-      $normalized = strtolower($answer);
-      if (!in_array($normalized, ['y', 'n', TRUE])) {
-        throw new \RuntimeException("Enter 'y' or 'n'");
-      }
-
-      return ($normalized == 'y' || $normalized) && $normalized != 'n';
-    };
-
     // No composer version is currently defined, offer to add it if we are
     // running composer update.
     if (empty($extra['composer-version'])) {
@@ -71,7 +61,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
       // Don't offer to update composer.json when running composer update,
       // otherwise the content-hash will become invalid.
       if ($event->getName() == ScriptEvents::PRE_INSTALL_CMD
-        || !($this->io->askAndValidate(sprintf('Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, null, true))) {
+        || !($this->io->askAndValidate(sprintf('Set the Composer version constraint to %s? [Y/n] ', "^$version"), $this->validate(), null, true))) {
         return;
       }
 
@@ -119,6 +109,24 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
     $this->composer->setLocker($locker);
 
     $this->io->writeError(sprintf('<info>Composer requirement set to %s.</info>', $constraint));
+  }
+
+  /**
+   * Validate y, n, and a newline as Y.
+   *
+   * @internal
+   *
+   * @return \Closure
+   */
+  public function validate(): \Closure {
+    return function ($answer) {
+      $normalized = strtolower($answer);
+      if (!in_array($normalized, ['y', 'n', "\n"], true)) {
+        throw new \RuntimeException("Enter 'y' or 'n'");
+      }
+
+      return ($normalized == 'y' || $normalized) && $normalized != 'n';
+    };
   }
 
 }
