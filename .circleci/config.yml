@@ -48,4 +48,10 @@ jobs:
           key: v1-dependencies-{{ checksum "composer.json" }}
         
       # run tests!
-      - run: vendor/bin/phpunit
+      - run: |
+          mkdir test-results
+          vendor/bin/phpunit --log-junit=test-results/results.xml
+
+      - store_test_results:
+          path: test-results
+
