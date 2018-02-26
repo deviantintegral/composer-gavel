@@ -61,7 +61,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
         throw new \RuntimeException("Enter 'y' or 'n'");
       }
 
-      return $normalized == 'y' || $normalized;
+      return ($normalized == 'y' || $normalized) && $normalized != 'n';
     };
 
     // No composer version is currently defined, offer to add it if we are
