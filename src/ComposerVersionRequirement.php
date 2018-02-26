@@ -71,7 +71,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
       // Don't offer to update composer.json when running composer update,
       // otherwise the content-hash will become invalid.
       if ($event->getName() == ScriptEvents::PRE_INSTALL_CMD
-        || !($this->io->askAndValidate(sprintf('Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, NULL, TRUE))) {
+        || !($this->io->askAndValidate(sprintf('Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, null, true))) {
         return;
       }
 
