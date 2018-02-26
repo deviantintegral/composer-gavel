@@ -22,6 +22,34 @@ use PHPUnit\Framework\TestCase;
 class ComposerVersionRequirementTest extends TestCase {
 
   /**
+   * @var string
+   */
+  protected $composerJsonFile;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Not all tests require this, but we want to ensure we never accidentally
+    // touch our real composer.json.
+    vfsStream::setup('project');
+    $this->composerJsonFile = vfsStream::url('project/composer.json');
+    file_put_contents($this->composerJsonFile, '{}');
+    putenv("COMPOSER=$this->composerJsonFile");
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown() {
+    parent::tearDown();
+    // Unset the COMPOSER variable.
+    putenv('COMPOSER');
+  }
+
+  /**
    * @covers ::getSubscribedEvents
    */
   public function testGetSubscribedEvents() {
@@ -67,11 +95,6 @@ class ComposerVersionRequirementTest extends TestCase {
    * @covers ::checkComposerVersion
    */
   public function testCheckAddComposerVersionUpdate() {
-    vfsStream::setup('project');
-    $file = vfsStream::url('project/composer.json');
-    file_put_contents($file, '{}');
-    putenv("COMPOSER=$file");
-
     /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Composer $composer */
     $composer = $this->getMockBuilder(Composer::class)->getMock();
     $version = $composer::VERSION;
@@ -111,7 +134,7 @@ class ComposerVersionRequirementTest extends TestCase {
     $event = new Event(ScriptEvents::PRE_UPDATE_CMD, $composer, $io);
     $vr->checkComposerVersion($event);
 
-    $composerJson = new JsonFile($file);
+    $composerJson = new JsonFile($this->composerJsonFile);
     $this->assertEquals(['extra' => $extra], $composerJson->read());
   }
 }
