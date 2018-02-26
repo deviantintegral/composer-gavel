@@ -224,4 +224,64 @@ class ComposerVersionRequirementTest extends TestCase {
     $validator('invalid');
   }
 
+  /**
+   * @covers ::writeConstraint
+   */
+  public function testComposerJsonFileNotReadable() {
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Composer $composer */
+    $composer = $this->getMockBuilder(Composer::class)->getMock();
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Package\RootPackageInterface $package */
+    $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
+    $composer->method('getPackage')->willReturn($package);
+
+    $package->method('getExtra')->willReturn([]);
+    // If setExtra is called then our check for the install event failed.
+    $extra = ['composer-version' => '^' . $composer::VERSION];
+    $package->expects($this->once())->method('setExtra')->with($extra);
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\IO\IOInterface $io */
+    $io = $this->getMockBuilder(IOInterface::class)->getMock();
+    $io->expects($this->once())->method('writeError')->with('<error>composer-version is not defined in extra in composer.json.</error>');
+    $io->expects($this->once())->method('askAndValidate')->willReturn(true);
+
+    chmod($this->composerJsonFile, 0);
+
+    $vr = new ComposerVersionRequirement();
+    $vr->activate($composer, $io);
+
+    $event = new Event(ScriptEvents::PRE_UPDATE_CMD, $composer, $io);
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('vfs://project/composer.json is not readable.');
+    $vr->checkComposerVersion($event);
+  }
+
+  public function testComposerJsonFileNotWritable() {
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Composer $composer */
+    $composer = $this->getMockBuilder(Composer::class)->getMock();
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Package\RootPackageInterface $package */
+    $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
+    $composer->method('getPackage')->willReturn($package);
+
+    $package->method('getExtra')->willReturn([]);
+    // If setExtra is called then our check for the install event failed.
+    $extra = ['composer-version' => '^' . $composer::VERSION];
+    $package->expects($this->once())->method('setExtra')->with($extra);
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\IO\IOInterface $io */
+    $io = $this->getMockBuilder(IOInterface::class)->getMock();
+    $io->expects($this->once())->method('writeError')->with('<error>composer-version is not defined in extra in composer.json.</error>');
+    $io->expects($this->once())->method('askAndValidate')->willReturn(true);
+
+    chmod($this->composerJsonFile, 0444);
+
+    $vr = new ComposerVersionRequirement();
+    $vr->activate($composer, $io);
+
+    $event = new Event(ScriptEvents::PRE_UPDATE_CMD, $composer, $io);
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('vfs://project/composer.json is not writable.');
+    $vr->checkComposerVersion($event);
+  }
 }
