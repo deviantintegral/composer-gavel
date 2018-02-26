@@ -62,5 +62,5 @@ jobs:
       - store_test_results:
           path: test-results
 
-      - run: vendor/bin/php-coveralls -x test-results/clover.xml
+      - run: vendor/bin/php-coveralls -o build.json -x test-results/clover.xml
 
