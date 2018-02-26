@@ -93,6 +93,7 @@ class ComposerVersionRequirementTest extends TestCase {
    *
    * @covers ::activate
    * @covers ::checkComposerVersion
+   * @covers ::writeConstraint
    */
   public function testCheckAddComposerVersionUpdate() {
     /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Composer $composer */
