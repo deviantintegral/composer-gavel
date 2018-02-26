@@ -69,17 +69,17 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
 
     $validator = function($answer) {
       $normalized = strtolower($answer);
-      if (!in_array($normalized, ['y', 'n'])) {
+      if (!in_array($normalized, ['y', 'n', TRUE])) {
         throw new \RuntimeException("Enter 'y' or 'n'");
       }
 
-      return $normalized == 'y';
+      return $normalized == 'y' || $normalized;
     };
 
     // See if this can be done during the initial plugin install.
     if (empty($extra['composer-version'])) {
-      if ($event->getName() == ScriptEvents::PRE_INSTALL_CMD || !($this->io->askAndValidate(sprintf('No composer-version key is defined in the composer.json config. Set the Composer version constraint to %s? [y/N] ', "^$version"), $validator, NULL, FALSE))) {
-        $this->io->writeError('<info>All composer versions are allowed.</info>');
+      $this->io->writeError('<error>composer-version is not defined in extra in composer.json.</error>');
+      if ($event->getName() == ScriptEvents::PRE_INSTALL_CMD || !($this->io->askAndValidate(sprintf('Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, NULL, TRUE))) {
         return;
       }
 
