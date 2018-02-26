@@ -45,10 +45,16 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
     ];
   }
 
+  /**
+   * Check currently running composer version, and offer to set a constraint.
+   *
+   * @param \Composer\Script\Event $event
+   */
   public function checkComposerVersion(Event $event) {
     $version = $this->composer::VERSION;
     $extra = $this->composer->getPackage()->getExtra();
 
+    // Validate y, n, and a newline as Y.
     $validator = function($answer) {
       $normalized = strtolower($answer);
       if (!in_array($normalized, ['y', 'n', TRUE])) {
@@ -58,10 +64,14 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
       return $normalized == 'y' || $normalized;
     };
 
-    // See if this can be done during the initial plugin install.
+    // No composer version is currently defined, offer to add it if we are
+    // running composer update.
     if (empty($extra['composer-version'])) {
       $this->io->writeError('<error>composer-version is not defined in extra in composer.json.</error>');
-      if ($event->getName() == ScriptEvents::PRE_INSTALL_CMD || !($this->io->askAndValidate(sprintf('Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, NULL, TRUE))) {
+      // Don't offer to update composer.json when running composer update,
+      // otherwise the content-hash will become invalid.
+      if ($event->getName() == ScriptEvents::PRE_INSTALL_CMD
+        || !($this->io->askAndValidate(sprintf('Set the Composer version constraint to %s? [Y/n] ', "^$version"), $validator, NULL, TRUE))) {
         return;
       }
 
@@ -78,6 +88,13 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
     $this->io->writeError(sprintf('<info>Composer %s satisfies composer-version %s.</info>', $version, $constraint));
   }
 
+  /**
+   * Write a composer version constraint to composer.json.
+   *
+   * @param string $constraint The semantic version of composer to require.
+   *
+   * @throws \RuntimeException Thrown when composer.json is not readable.
+   */
   protected function writeConstraint($constraint) {
     $file = Factory::getComposerFile();
     if (!is_readable($file)) {
@@ -87,14 +104,14 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
       throw new \RuntimeException(sprintf('%s is not writable.', $file));
     }
 
+    // Load composer.json and save the constraint.
     $json = new JsonFile($file);
-    $contents = file_get_contents($json->getPath());
-
-    $manipulator = new JsonManipulator($contents);
+    $manipulator = new JsonManipulator(file_get_contents($json->getPath()));
     $manipulator->addProperty('extra.composer-version', $constraint);
+    $contents = $manipulator->getContents();
+    file_put_contents($json->getPath(), $contents);
 
-    file_put_contents($json->getPath(), $manipulator->getContents());
-    $contents = file_get_contents($json->getPath());
+    // Update the lockfile's content-hash property.
     $lockFile = "json" === pathinfo($file, PATHINFO_EXTENSION)
       ? substr($file, 0, -4).'lock'
       : $file . '.lock';
