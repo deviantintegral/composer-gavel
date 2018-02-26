@@ -53,10 +53,16 @@ jobs:
             - /usr/local/etc/php/conf.d/xdebug.ini
 
           key: v1-dependencies-{{ checksum "composer.json" }}--{{ checksum ".circleci/config.yml" }}
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
         
       # run tests!
       - run: |
           mkdir -p test-results
+          ./cc-test-reporter before-build
           vendor/bin/phpunit
 
       - store_test_results:
@@ -65,4 +71,6 @@ jobs:
       - run: |
           apt-get update -y && apt-get install git -y
           vendor/bin/php-coveralls -o build.json -x test-results/clover.xml
+          cd test-results
+           ../cc-test-reporter after-build --coverage-input-type clover --exit-code $?
 
