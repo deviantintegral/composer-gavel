@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: php:7.2
+      - image: php:7.2-alpine
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -38,7 +38,7 @@ jobs:
               exit 1
           fi
 
-          php composer-setup.php --quiet --filepath /usr/local/bin --filename composer
+          php composer-setup.php --quiet --install-dir /usr/local/bin --filename composer
 
       - run: composer install -n --prefer-dist
 
