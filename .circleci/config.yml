@@ -56,11 +56,13 @@ jobs:
         
       # run tests!
       - run: |
-          mkdir test-results
+          mkdir -p test-results
           vendor/bin/phpunit
 
       - store_test_results:
           path: test-results
 
-      - run: vendor/bin/php-coveralls -o build.json -x test-results/clover.xml
+      - run: |
+          apt-get update -y && apt-get install git -y
+          vendor/bin/php-coveralls -o build.json -x test-results/clover.xml
 
