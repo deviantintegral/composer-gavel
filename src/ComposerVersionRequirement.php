@@ -112,7 +112,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
   }
 
   /**
-   * Validate y, n, and a newline as Y.
+   * Validate y, n, and a newline (mapped to '1') as Y.
    *
    * @internal
    *
@@ -121,7 +121,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
   public function validate(): \Closure {
     return function ($answer) {
       $normalized = strtolower($answer);
-      if (!in_array($normalized, ['y', 'n', "\n"], true)) {
+      if (!in_array($normalized, ['y', 'n', '1'], true)) {
         throw new \RuntimeException("Enter 'y' or 'n'");
       }
 

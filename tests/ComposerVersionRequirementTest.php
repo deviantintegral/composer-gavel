@@ -147,7 +147,7 @@ class ComposerVersionRequirementTest extends TestCase {
     $validator = $vr->validate();
     $this->assertTrue($validator('Y'));
     $this->assertTrue($validator('y'));
-    $this->assertTrue($validator("\n"));
+    $this->assertTrue($validator('1'));
   }
 
   /**
@@ -158,7 +158,6 @@ class ComposerVersionRequirementTest extends TestCase {
     $validator = $vr->validate();
     $this->assertFalse($validator('N'));
     $this->assertFalse($validator('n'));
-    $this->assertFalse($validator(''));
   }
 
   /**
