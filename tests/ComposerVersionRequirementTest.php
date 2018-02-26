@@ -11,6 +11,7 @@ use Composer\Repository\RepositoryManager;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Deviantintegral\ComposerGavel\ComposerVersionRequirement;
+use Deviantintegral\ComposerGavel\Exception\ConstraintException;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
@@ -137,6 +138,58 @@ class ComposerVersionRequirementTest extends TestCase {
 
     $composerJson = new JsonFile($this->composerJsonFile);
     $this->assertEquals(['extra' => $extra], $composerJson->read());
+  }
+
+  /**
+   * @covers ::checkComposerVersion
+   */
+  public function testConstraintPasses() {
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Composer $composer */
+    $composer = $this->getMockBuilder(Composer::class)->getMock();
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Package\RootPackageInterface $package */
+    $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
+    $composer->method('getPackage')->willReturn($package);
+
+    // This matches the constraint in require-dev in composer.json.
+    $package->method('getExtra')->willReturn(['composer-version' => '^1.6.3']);
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\IO\IOInterface $io */
+    $io = $this->getMockBuilder(IOInterface::class)->getMock();
+    $io->expects($this->once())->method('writeError')->with('<info>Composer ' . $composer::VERSION . ' satisfies composer-version ^1.6.3.</info>');
+
+    $vr = new ComposerVersionRequirement();
+    $vr->activate($composer, $io);
+
+    $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
+    $vr->checkComposerVersion($event);
+  }
+
+  /**
+   * @covers ::checkComposerVersion
+   */
+  public function testConstraintFails() {
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Composer $composer */
+    $composer = $this->getMockBuilder(Composer::class)->getMock();
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Package\RootPackageInterface $package */
+    $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
+    $composer->method('getPackage')->willReturn($package);
+
+    // It is safe to test against Composer 2 as our dev dependency locks us to
+    // Composer 1.
+    $package->method('getExtra')->willReturn(['composer-version' => '^2.0.0']);
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\IO\IOInterface $io */
+    $io = $this->getMockBuilder(IOInterface::class)->getMock();
+
+    $vr = new ComposerVersionRequirement();
+    $vr->activate($composer, $io);
+
+    $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
+    $this->expectException(ConstraintException::class);
+    $this->expectExceptionMessage('Composer ' . $composer::VERSION . ' is in use but this project requires Composer ^2.0.0. Upgrade composer by running composer self-update.');
+    $vr->checkComposerVersion($event);
   }
 
   /**
