@@ -30,7 +30,7 @@ is especially useful when developers need to run `composer update`.
           "composer-version": "^1.6.3"
       }
    ```
-1. `$ composer update --lock` # Update the lockfile hash.
+1. Update the composer.lock hash with `$ composer update --lock`.
 
 When the running composer version does not satisfy the constraint, an error
 will be thrown.
