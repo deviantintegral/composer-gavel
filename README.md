@@ -30,6 +30,7 @@ will be thrown.
 
 ![gavel error](img/gavel-error.png)
 
-It's recommended to require this plugin on a per-project basis instead of
-globally. The composer version is a root-only key and is not used in
-dependencies.
+It's recommended to require this plugin on a per-project basis as well as
+globally. If the plugin is not globally installed, then the version check will
+not run during the very first composer install or update. The composer version
+is a root-only key and is not used in dependencies.
