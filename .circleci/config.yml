@@ -61,12 +61,12 @@ jobs:
         
       # run tests!
       - run: |
-          mkdir -p test-results
+          mkdir -p build/logs
           ./cc-test-reporter before-build
           vendor/bin/phpunit
 
       - store_test_results:
-          path: test-results
+          path: build/logs
 
       - run: |
           apt-get update -y && apt-get install git -y
