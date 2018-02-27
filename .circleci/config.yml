@@ -145,4 +145,3 @@ workflows:
       - build
       - build_php70
       - build_php71
-      - build_php72
