@@ -17,7 +17,7 @@ is especially useful when developers need to run `composer update`.
 
 ### Add plugin and update other dependencies
 
-1. `$ composer require deviantintegral/composer-gavel`
+1. `$ composer require --dev deviantintegral/composer-gavel`
 1. `$ composer update`
 
 ### Add without updating anything
@@ -38,4 +38,5 @@ will be thrown.
 ![gavel error](img/gavel-error.png)
 
 It's recommended to require this plugin on a per-project basis instead of
-globally.
+globally. The composer version is a root-only key and is not used in
+dependencies.
