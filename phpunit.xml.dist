@@ -19,7 +19,7 @@
         </whitelist>
     </filter>
     <logging>
-      <log type="coverage-xml" target="test-results/junit.xml"/>
+      <log type="coverage-xml" target="test-results/junit"/>
       <log type="coverage-clover" target="test-results/clover.xml"/>
     </logging>
 </phpunit>
