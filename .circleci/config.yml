@@ -62,7 +62,7 @@ jobs:
       # run tests!
       - run: |
           mkdir -p test-results
-          ./cc-test-reporter before-build
+          ./cc-test-reporter before-build -d
           vendor/bin/phpunit
 
       - store_test_results:
@@ -72,5 +72,5 @@ jobs:
           apt-get update -y && apt-get install git -y
           vendor/bin/php-coveralls -o build.json -x test-results/clover.xml
           cd test-results
-           ../cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+           ../cc-test-reporter after-build --coverage-input-type clover -d --exit-code $?
 
