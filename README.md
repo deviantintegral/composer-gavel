@@ -15,7 +15,9 @@ is especially useful when developers need to run `composer update`.
 
 ## Usage
 
-### Add plugin and update other dependencies
+`$ composer global require deviantintegral/composer-gavel`
+
+### Add plugin to your project and update other dependencies
 
 1. `$ composer require --dev deviantintegral/composer-gavel`
 1. `$ composer update`
@@ -32,5 +34,6 @@ will be thrown.
 
 It's recommended to require this plugin on a per-project basis as well as
 globally. If the plugin is not globally installed, then the version check will
-not run during the very first composer install or update. The composer version
-is a root-only key and is not used in dependencies.
+not run during the very first composer install or update. The per-project
+requirement ensures that the plugin is activated after the initial install.
+The composer version is a root-only key and is not used in dependencies.
