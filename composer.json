@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "composer/composer": "^1.6",
-        "phpunit/phpunit": "^7.0",
+        "phpunit/phpunit": "^6.0 || ^7.0",
         "mikey179/vfsStream": "^1.6",
         "php-coveralls/php-coveralls": "^2.0"
     },
