@@ -11,7 +11,7 @@ test: &test
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-test-dependencies-{{ checksum "composer.json" }}--{{ checksum ".circleci/config.yml" }}
+          - v1-test-dependencies-{{ checksum "composer.json" }}-{{ checksum ".circleci/config.yml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-test-dependencies-
 
@@ -38,7 +38,7 @@ test: &test
           paths:
             - ./vendor
 
-          key: v1-test--dependencies-{{ checksum "composer.json" }}--{{ checksum ".circleci/config.yml" }}
+          key: v1-test-dependencies-{{ checksum "composer.json" }}-{{ checksum ".circleci/config.yml" }}
       # run tests!
       - run: |
           mkdir -p build/logs
@@ -54,7 +54,7 @@ test_and_cover: &test_and_cover
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-test-cover-dependencies-{{ checksum "composer.json" }}--{{ checksum ".circleci/config.yml" }}
+          - v1-test-cover-dependencies-{{ checksum "composer.json" }}-{{ checksum ".circleci/config.yml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-test-cover-dependencies-
 
@@ -87,7 +87,7 @@ test_and_cover: &test_and_cover
             - /usr/local/lib/php/extensions/no-debug-non-zts-20170718
             - /usr/local/etc/php/conf.d/xdebug.ini
 
-          key: v1-test-cover-dependencies-{{ checksum "composer.json" }}--{{ checksum ".circleci/config.yml" }}
+          key: v1-test-cover-dependencies-{{ checksum "composer.json" }}-{{ checksum ".circleci/config.yml" }}
       - run:
           name: Setup Code Climate test-reporter
           command: |
