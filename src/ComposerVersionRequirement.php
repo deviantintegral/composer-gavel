@@ -51,7 +51,8 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
    * @param \Composer\Script\Event $event
    */
   public function checkComposerVersion(Event $event) {
-    $version = $this->composer::VERSION;
+    $class_name = get_class($this->composer);
+    $version = $class_name::VERSION;
     $extra = $this->composer->getPackage()->getExtra();
 
     // No composer version is currently defined, offer to add it if we are
@@ -118,7 +119,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
    *
    * @return \Closure
    */
-  public function validate(): \Closure {
+  public function validate() {
     return function ($answer) {
       $normalized = strtolower($answer);
       if (!in_array($normalized, ['y', 'n', '1'], true)) {
