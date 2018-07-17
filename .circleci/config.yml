@@ -97,7 +97,7 @@ test_and_cover: &test_and_cover
       # run tests!
       - run: |
           mkdir -p build/logs
-          ./cc-test-reporter before-build
+          CC_TEST_REPORTER_ID=3faa688cc4646bf14f60a05c1e41afb67b53d57081931b70f11c211394c0d291 ./cc-test-reporter before-build
           vendor/bin/phpunit
 
       - store_test_results:
@@ -105,8 +105,7 @@ test_and_cover: &test_and_cover
 
       - run: |
           apt-get update -y && apt-get install git -y
-          vendor/bin/php-coveralls -o build.json -x build/logs/clover.xml
-           ./cc-test-reporter after-build --coverage-input-type clover --exit-code $? test-results/clover.xml
+          CC_TEST_REPORTER_ID=3faa688cc4646bf14f60a05c1e41afb67b53d57081931b70f11c211394c0d291 ./cc-test-reporter after-build --coverage-input-type clover --exit-code $? test-results/clover.xml
 
 jobs:
   build:
@@ -122,6 +121,14 @@ jobs:
     working_directory: ~/repo
 
     <<: *test_and_cover
+
+  build_php56:
+    docker:
+      - image: php:5.6
+
+    working_directory: ~/repo
+
+    <<: *test
 
   build_php70:
     docker:
@@ -146,5 +153,6 @@ workflows:
   test_cover_workflow:
     jobs:
       - build
+      - build_php56
       - build_php70
       - build_php71
