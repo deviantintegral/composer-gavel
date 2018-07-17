@@ -105,8 +105,7 @@ test_and_cover: &test_and_cover
 
       - run: |
           apt-get update -y && apt-get install git -y
-          vendor/bin/php-coveralls -o build.json -x build/logs/clover.xml
-           CC_TEST_REPORTER_ID=6942e474c4bce75186eee758125dfc8bcaadba5347f6f470ad4fdbc2a0d0ec68 ./cc-test-reporter after-build --coverage-input-type clover --exit-code $? test-results/clover.xml
+          CC_TEST_REPORTER_ID=6942e474c4bce75186eee758125dfc8bcaadba5347f6f470ad4fdbc2a0d0ec68 ./cc-test-reporter after-build --coverage-input-type clover --exit-code $? test-results/clover.xml
 
 jobs:
   build:
