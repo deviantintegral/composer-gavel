@@ -16,8 +16,7 @@
     "require-dev": {
         "composer/composer": "^1.6",
         "phpunit/phpunit": "5 - 7",
-        "mikey179/vfsStream": "^1.6",
-        "php-coveralls/php-coveralls": "^2.0"
+        "mikey179/vfsStream": "^1.6"
     },
     "autoload": {
         "psr-4": {"Deviantintegral\\ComposerGavel\\": "src"}
