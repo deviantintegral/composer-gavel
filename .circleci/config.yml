@@ -97,7 +97,7 @@ test_and_cover: &test_and_cover
       # run tests!
       - run: |
           mkdir -p build/logs
-          CC_TEST_REPORTER_ID=6942e474c4bce75186eee758125dfc8bcaadba5347f6f470ad4fdbc2a0d0ec68 ./cc-test-reporter before-build
+          CC_TEST_REPORTER_ID=3faa688cc4646bf14f60a05c1e41afb67b53d57081931b70f11c211394c0d291 ./cc-test-reporter before-build
           vendor/bin/phpunit
 
       - store_test_results:
@@ -105,7 +105,7 @@ test_and_cover: &test_and_cover
 
       - run: |
           apt-get update -y && apt-get install git -y
-          CC_TEST_REPORTER_ID=6942e474c4bce75186eee758125dfc8bcaadba5347f6f470ad4fdbc2a0d0ec68 ./cc-test-reporter after-build --coverage-input-type clover --exit-code $? test-results/clover.xml
+          CC_TEST_REPORTER_ID=3faa688cc4646bf14f60a05c1e41afb67b53d57081931b70f11c211394c0d291 ./cc-test-reporter after-build --coverage-input-type clover --exit-code $? test-results/clover.xml
 
 jobs:
   build:
