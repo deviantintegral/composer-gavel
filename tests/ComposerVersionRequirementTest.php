@@ -90,6 +90,27 @@ class ComposerVersionRequirementTest extends TestCase {
   }
 
   /**
+   * Test that dev releases of composer don't fail.
+   *
+   * @covers ::activate
+   * @covers ::checkComposerVersion
+   */
+  public function testCheckComposerDev() {
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Composer $composer */
+    $composer = new DummyComposer();
+
+    /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\IO\IOInterface $io */
+    $io = $this->getMockBuilder(IOInterface::class)->getMock();
+    $io->expects($this->once())->method('writeError')->with('<warning>You are running a development version of Composer. The Composer version will not be enforced.</warning>');
+
+    $vr = new ComposerVersionRequirement();
+    $vr->activate($composer, $io);
+
+    $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
+    $vr->checkComposerVersion($event);
+  }
+
+  /**
    * Test that a missing version constraint during update is added.
    *
    * @covers ::activate
@@ -284,4 +305,8 @@ class ComposerVersionRequirementTest extends TestCase {
     $this->expectExceptionMessage('vfs://project/composer.json is not writable.');
     $vr->checkComposerVersion($event);
   }
+}
+
+class DummyComposer extends Composer {
+  const VERSION = '@package_version@';
 }
