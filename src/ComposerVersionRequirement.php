@@ -53,6 +53,13 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
   public function checkComposerVersion(Event $event) {
     $class_name = get_class($this->composer);
     $version = $class_name::VERSION;
+
+    // Handle git checkouts of composer for debugging.
+    if ($version === '@package_version@' || $version === '@package_branch_alias_version@') {
+      $this->io->writeError('<warning>You are running a development version of Composer. The Composer version will not be enforced.</warning>');
+      return;
+    }
+
     $extra = $this->composer->getPackage()->getExtra();
 
     // No composer version is currently defined, offer to add it if we are
