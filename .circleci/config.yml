@@ -6,6 +6,9 @@ version: 2
 
 test: &test
   steps:
+      # php:* has no zip extension and the CLI is faster to install.
+      - run: apt-get update -y && apt-get install unzip openssh-client git -y
+
       - checkout
 
       # Download and cache dependencies
@@ -14,9 +17,6 @@ test: &test
           - v1-test-dependencies-{{ checksum "composer.json" }}-{{ checksum ".circleci/config.yml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-test-dependencies-
-
-      # php:* has no zip extension and the CLI is faster to install.
-      - run: apt-get update -y && apt-get install unzip -y
 
       - run: |
           EXPECTED_SIGNATURE=$(curl -L https://composer.github.io/installer.sig)
@@ -49,6 +49,8 @@ test: &test
 
 test_and_cover: &test_and_cover
   steps:
+      # php:* has no zip extension and the CLI is faster to install.
+      - run: apt-get update -y && apt-get install unzip openssh-client git -y
       - checkout
 
       # Download and cache dependencies
@@ -57,9 +59,6 @@ test_and_cover: &test_and_cover
           - v1-test-cover-dependencies-{{ checksum "composer.json" }}-{{ checksum ".circleci/config.yml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-test-cover-dependencies-
-
-      # php:* has no zip extension and the CLI is faster to install.
-      - run: apt-get update -y && apt-get install unzip -y
 
       - run: |
           EXPECTED_SIGNATURE=$(curl -L https://composer.github.io/installer.sig)
