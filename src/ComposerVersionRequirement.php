@@ -38,6 +38,18 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
   /**
    * {@inheritdoc}
    */
+  public function deactivate(Composer $composer, IOInterface $io) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uninstall(Composer $composer, IOInterface $io) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getSubscribedEvents() {
     return [
       ScriptEvents::PRE_INSTALL_CMD => 'checkComposerVersion',
