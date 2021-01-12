@@ -173,11 +173,11 @@ class ComposerVersionRequirementTest extends TestCase {
     $composer->method('getPackage')->willReturn($package);
 
     // This matches the constraint in require-dev in composer.json.
-    $package->method('getExtra')->willReturn(['composer-version' => '^1.6.3']);
+    $package->method('getExtra')->willReturn(['composer-version' => '^2.0']);
 
     /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\IO\IOInterface $io */
     $io = $this->getMockBuilder(IOInterface::class)->getMock();
-    $io->expects($this->once())->method('writeError')->with('<info>Composer ' . $composer::VERSION . ' satisfies composer-version ^1.6.3.</info>');
+    $io->expects($this->once())->method('writeError')->with('<info>Composer ' . $composer::VERSION . ' satisfies composer-version ^2.0.</info>');
 
     $vr = new ComposerVersionRequirement();
     $vr->activate($composer, $io);
@@ -197,9 +197,7 @@ class ComposerVersionRequirementTest extends TestCase {
     $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
     $composer->method('getPackage')->willReturn($package);
 
-    // It is safe to test against Composer 2 as our dev dependency locks us to
-    // Composer 1.
-    $package->method('getExtra')->willReturn(['composer-version' => '^2.0.0']);
+    $package->method('getExtra')->willReturn(['composer-version' => '^2.9.9']);
 
     /** @var \PHPUnit\Framework\MockObject\MockObject|\Composer\IO\IOInterface $io */
     $io = $this->getMockBuilder(IOInterface::class)->getMock();
@@ -209,7 +207,7 @@ class ComposerVersionRequirementTest extends TestCase {
 
     $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
     $this->expectException(ConstraintException::class);
-    $this->expectExceptionMessage('Composer ' . $composer::VERSION . ' is in use but this project requires Composer ^2.0.0. Upgrade composer by running composer self-update.');
+    $this->expectExceptionMessage('Composer ' . $composer::VERSION . ' is in use but this project requires Composer ^2.9.9. Upgrade composer by running composer self-update.');
     $vr->checkComposerVersion($event);
   }
 
