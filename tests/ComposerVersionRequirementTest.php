@@ -30,7 +30,7 @@ class ComposerVersionRequirementTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Not all tests require this, but we want to ensure we never accidentally
@@ -44,7 +44,7 @@ class ComposerVersionRequirementTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     parent::tearDown();
     // Unset the COMPOSER variable.
     putenv('COMPOSER');
