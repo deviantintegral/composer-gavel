@@ -30,7 +30,7 @@ test: &test
               exit 1
           fi
 
-          php composer-setup.php --quiet --install-dir /usr/local/bin --filename composer
+          php composer-setup.php --$COMPOSER_VERSION --quiet --install-dir /usr/local/bin --filename composer
 
       - run: composer install -n --prefer-dist
 
@@ -73,7 +73,7 @@ test_and_cover: &test_and_cover
               exit 1
           fi
 
-          php composer-setup.php --quiet --install-dir /usr/local/bin --filename composer
+          php composer-setup.php --$COMPOSER_VERSION --quiet --install-dir /usr/local/bin --filename composer
 
       - run: composer install -n --prefer-dist
 
@@ -114,6 +114,8 @@ jobs:
       - image: php:8.0
 
     working_directory: ~/repo
+    environment:
+      COMPOSER_VERSION: 2
 
     <<: *test_and_cover
 
@@ -122,6 +124,8 @@ jobs:
       - image: php:7.3
 
     working_directory: ~/repo
+    environment:
+      COMPOSER_VERSION: 2
 
     <<: *test
 
@@ -130,7 +134,19 @@ jobs:
       - image: php:7.4
 
     working_directory: ~/repo
+    environment:
+      COMPOSER_VERSION: 2
 
+    <<: *test
+
+  build_php74_composer_1:
+    docker:
+      - image: php:7.4
+
+    working_directory: ~/repo
+
+    environment:
+      COMPOSER_VERSION: 1
     <<: *test
 
 workflows:
@@ -142,3 +158,4 @@ workflows:
       - build
       - build_php73
       - build_php74
+      - build_php74_composer_1
