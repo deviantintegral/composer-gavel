@@ -126,7 +126,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
       ? substr($file, 0, -4).'lock'
       : $file . '.lock';
 
-    if (substr(PluginInterface::PLUGIN_API_VERSION, 0) == '1') {
+    if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0.0', '<')) {
       $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $this->composer->getRepositoryManager(), $this->composer->getInstallationManager(), $contents);
     }
     else {
