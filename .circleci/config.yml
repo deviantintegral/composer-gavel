@@ -96,7 +96,7 @@ test_and_cover: &test_and_cover
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
-        
+
       # run tests!
       - run: |
           mkdir -p build/logs
@@ -113,7 +113,7 @@ test_and_cover: &test_and_cover
 jobs:
   build:
     docker:
-      - image: php:8.0
+      - image: php:8.1
 
     working_directory: ~/repo
     environment:
@@ -121,9 +121,9 @@ jobs:
 
     <<: *test_and_cover
 
-  build_php73:
+  build_php80:
     docker:
-      - image: php:7.3
+      - image: php:8.0
 
     working_directory: ~/repo
     environment:
@@ -158,6 +158,6 @@ workflows:
   test_cover_workflow:
     jobs:
       - build
-      - build_php73
       - build_php74
       - build_php74_composer_1
+      - build_php80
