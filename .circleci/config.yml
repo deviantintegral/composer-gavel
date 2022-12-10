@@ -121,6 +121,16 @@ jobs:
 
     <<: *test_and_cover
 
+  build_php82:
+    docker:
+      - image: php:8.2
+
+    working_directory: ~/repo
+    environment:
+      COMPOSER_VERSION: 2
+
+    <<: *test
+
   build_php80:
     docker:
       - image: php:8.0
@@ -131,26 +141,6 @@ jobs:
 
     <<: *test
 
-  build_php74:
-    docker:
-      - image: php:7.4
-
-    working_directory: ~/repo
-    environment:
-      COMPOSER_VERSION: 2
-
-    <<: *test
-
-  build_php74_composer_1:
-    docker:
-      - image: php:7.4
-
-    working_directory: ~/repo
-
-    environment:
-      COMPOSER_VERSION: 1
-    <<: *test
-
 workflows:
   version: 2
 
@@ -158,6 +148,5 @@ workflows:
   test_cover_workflow:
     jobs:
       - build
-      - build_php74
-      - build_php74_composer_1
+      - build_php82
       - build_php80
