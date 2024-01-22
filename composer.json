@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "composer/composer": "2.6.6",
-        "phpunit/phpunit": "9.6.16",
+        "phpunit/phpunit": "10.5.9",
         "mikey179/vfsstream": "1.6.11"
     },
     "autoload": {
