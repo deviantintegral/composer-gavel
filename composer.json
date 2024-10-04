@@ -14,7 +14,7 @@
         "composer-plugin-api": "^2.0"
     },
     "require-dev": {
-        "composer/composer": "2.8.0",
+        "composer/composer": "2.8.1",
         "phpunit/phpunit": "9.6.21",
         "mikey179/vfsstream": "1.6.12"
     },
