@@ -1,0 +1,15 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
