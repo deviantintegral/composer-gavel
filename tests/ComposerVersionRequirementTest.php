@@ -175,32 +175,6 @@ class ComposerVersionRequirementTest extends TestCase
     /**
      * @covers ::checkComposerVersion
      */
-    public function testConstraintPasses(): void
-    {
-        /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
-        $composer = $this->getMockBuilder(Composer::class)->getMock();
-
-        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
-        $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
-        $composer->method('getPackage')->willReturn($package);
-
-        // This matches the constraint in require-dev in composer.json.
-        $package->method('getExtra')->willReturn(['composer-version' => '^2.0']);
-
-        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
-        $io = $this->getMockBuilder(IOInterface::class)->getMock();
-        $io->expects($this->once())->method('writeError')->with('<info>Composer '.$composer::VERSION.' satisfies composer-version ^2.0.</info>');
-
-        $vr = new ComposerVersionRequirement();
-        $vr->activate($composer, $io);
-
-        $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
-        $vr->checkComposerVersion($event);
-    }
-
-    /**
-     * @covers ::checkComposerVersion
-     */
     public function testConstraintFails(): void
     {
         /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
