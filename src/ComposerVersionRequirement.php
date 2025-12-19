@@ -141,7 +141,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
                 throw new \RuntimeException("Enter 'y' or 'n'");
             }
 
-            return 'y' === $normalized || '1' === $normalized;
+            return 'n' !== $normalized;
         };
     }
 }

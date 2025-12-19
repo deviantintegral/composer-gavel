@@ -6,6 +6,7 @@ use Composer\Composer;
 use Composer\Installer\InstallationManager;
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
+use Composer\Package\Locker;
 use Composer\Package\RootPackageInterface;
 use Composer\Repository\RepositoryManager;
 use Composer\Script\Event;
@@ -153,7 +154,13 @@ class ComposerVersionRequirementTest extends TestCase
               $this->assertEquals($expectedMessages[$callCount], $message);
               ++$callCount;
           });
-        $io->expects($this->once())->method('askAndValidate')->willReturn(true);
+        $io->expects($this->once())->method('askAndValidate')
+          ->willReturnCallback(function ($question, $validator, $attempts, $default) {
+              // Verify the default is true (pressing Enter means "yes")
+              $this->assertTrue($default, 'The default should be true (yes) when user presses Enter');
+
+              return true;
+          });
 
         $vr = new ComposerVersionRequirement();
         $vr->activate($composer, $io);
@@ -312,6 +319,58 @@ class ComposerVersionRequirementTest extends TestCase
         $event = new Event(ScriptEvents::PRE_UPDATE_CMD, $composer, $io);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('vfs://project/composer.json is not writable.');
+        $vr->checkComposerVersion($event);
+    }
+
+    /**
+     * Test that the lockfile path is correctly computed from composer.json.
+     *
+     * @covers ::writeConstraint
+     */
+    public function testLockfilePathIsCorrectlyComputed(): void
+    {
+        /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
+        $composer = $this->getMockBuilder(Composer::class)->getMock();
+        $repositoryManager = $this->getMockBuilder(RepositoryManager::class)
+          ->disableOriginalConstructor()
+          ->getMock();
+        $composer->method('getRepositoryManager')->willReturn($repositoryManager);
+        $installationManager = $this->getMockBuilder(InstallationManager::class)
+          ->disableOriginalConstructor()
+          ->getMock();
+        $composer->method('getInstallationManager')->willReturn($installationManager);
+
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
+        $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
+        $composer->method('getPackage')->willReturn($package);
+
+        $package->method('getExtra')->willReturn([]);
+        $extra = ['composer-version' => '^'.$composer::VERSION];
+        $package->expects($this->once())->method('setExtra')->with($extra);
+
+        $expectedLockFile = 'vfs://project/composer.lock';
+        $composer->expects($this->once())->method('setLocker')
+          ->willReturnCallback(function (Locker $locker) use ($expectedLockFile) {
+              // Use reflection to verify the lockfile path
+              $reflection = new \ReflectionClass($locker);
+              $lockFileProperty = $reflection->getProperty('lockFile');
+              $lockFile = $lockFileProperty->getValue($locker);
+
+              $jsonFileReflection = new \ReflectionClass($lockFile);
+              $pathProperty = $jsonFileReflection->getProperty('path');
+              $path = $pathProperty->getValue($lockFile);
+
+              $this->assertEquals($expectedLockFile, $path);
+          });
+
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
+        $io = $this->getMockBuilder(IOInterface::class)->getMock();
+        $io->method('askAndValidate')->willReturn(true);
+
+        $vr = new ComposerVersionRequirement();
+        $vr->activate($composer, $io);
+
+        $event = new Event(ScriptEvents::PRE_UPDATE_CMD, $composer, $io);
         $vr->checkComposerVersion($event);
     }
 }
