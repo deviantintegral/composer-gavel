@@ -4,5 +4,9 @@
         "directories": [
             "src"
         ]
+    },
+    "mutators": {
+        "@default": true,
+        "ProtectedVisibility": false
     }
 }
