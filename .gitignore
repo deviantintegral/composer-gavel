@@ -3,3 +3,6 @@ composer.lock
 build
 .phpunit.cache
 .php-cs-fixer.cache
+infection.phar
+infection.phar.asc
+infection.log
