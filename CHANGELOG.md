@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0](https://github.com/deviantintegral/composer-gavel/compare/v0.6.0...v1.0.0) (2025-12-19)
+
+
+### Features
+
+* support composer snapshot releases ([9d49a71](https://github.com/deviantintegral/composer-gavel/commit/9d49a71a150884f01fc3f3792640a64492748164)), closes [#3](https://github.com/deviantintegral/composer-gavel/issues/3)
+
+
+### Miscellaneous Chores
+
+* **main:** prepare for 1.0.0 ([e713dc9](https://github.com/deviantintegral/composer-gavel/commit/e713dc99a253918064c386dac0ecd2aff6caf55a))
+
 ## [0.6.0](https://github.com/deviantintegral/composer-gavel/compare/v0.5.0...v0.6.0) (2025-12-19)
 
 
