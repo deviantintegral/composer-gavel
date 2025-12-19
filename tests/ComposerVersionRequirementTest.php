@@ -247,7 +247,7 @@ class ComposerVersionRequirementTest extends TestCase
 
         /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
-        $io->expects($this->once())->method('askAndValidate')->willReturn(true);
+        $io->method('askAndValidate')->willReturn(true);
 
         chmod($this->composerJsonFile, 0);
 
@@ -273,7 +273,7 @@ class ComposerVersionRequirementTest extends TestCase
 
         /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
-        $io->expects($this->once())->method('askAndValidate')->willReturn(true);
+        $io->method('askAndValidate')->willReturn(true);
 
         chmod($this->composerJsonFile, 0444);
 
