@@ -52,7 +52,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
     /**
      * Check currently running composer version, and offer to set a constraint.
      */
-    public function checkComposerVersion(Event $event)
+    public function checkComposerVersion(Event $event): void
     {
         $class_name = \get_class($this->composer);
         $version = $class_name::VERSION;
@@ -97,7 +97,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
      *
      * @throws \RuntimeException Thrown when composer.json is not readable.
      */
-    protected function writeConstraint($constraint)
+    protected function writeConstraint($constraint): void
     {
         $file = Factory::getComposerFile();
         if (!is_readable($file)) {
@@ -119,11 +119,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
           ? substr($file, 0, -4).'lock'
           : $file.'.lock';
 
-        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0.0', '<')) {
-            $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $this->composer->getRepositoryManager(), $this->composer->getInstallationManager(), $contents);
-        } else {
-            $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $this->composer->getInstallationManager(), $contents);
-        }
+        $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $this->composer->getInstallationManager(), $contents);
 
         $this->composer->setLocker($locker);
 
@@ -145,7 +141,7 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
                 throw new \RuntimeException("Enter 'y' or 'n'");
             }
 
-            return ('y' == $normalized || $normalized) && 'n' != $normalized;
+            return 'y' === $normalized || '1' === $normalized;
         };
     }
 }

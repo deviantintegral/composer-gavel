@@ -49,7 +49,7 @@ class ComposerVersionRequirementTest extends TestCase
     /**
      * @covers ::getSubscribedEvents
      */
-    public function testGetSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         $this->assertEquals([
             ScriptEvents::PRE_INSTALL_CMD => 'checkComposerVersion',
@@ -63,12 +63,12 @@ class ComposerVersionRequirementTest extends TestCase
      * @covers ::activate
      * @covers ::checkComposerVersion
      */
-    public function testCheckNoComposerVersionInstall()
+    public function testCheckNoComposerVersionInstall(): void
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject|Composer $composer */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
         $composer = $this->getMockBuilder(Composer::class)->getMock();
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|RootPackageInterface $package */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
         $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
         $composer->method('getPackage')->willReturn($package);
 
@@ -76,7 +76,7 @@ class ComposerVersionRequirementTest extends TestCase
         // If setExtra is called then our check for the install event failed.
         $package->expects($this->never())->method('setExtra');
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|IOInterface $io */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
         $io->expects($this->once())->method('writeError')->with('<error>composer-version is not defined in extra in composer.json.</error>');
 
@@ -93,12 +93,12 @@ class ComposerVersionRequirementTest extends TestCase
      * @covers ::activate
      * @covers ::checkComposerVersion
      */
-    public function testCheckComposerDev()
+    public function testCheckComposerDev(): void
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject|Composer $composer */
+        /** @var DummyComposer $composer */
         $composer = new DummyComposer();
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|IOInterface $io */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
         $io->expects($this->once())->method('writeError')->with('<warning>You are running a development version of Composer. The Composer version will not be enforced.</warning>');
 
@@ -116,9 +116,9 @@ class ComposerVersionRequirementTest extends TestCase
      * @covers ::checkComposerVersion
      * @covers ::writeConstraint
      */
-    public function testCheckAddComposerVersionUpdate()
+    public function testCheckAddComposerVersionUpdate(): void
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject|Composer $composer */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
         $composer = $this->getMockBuilder(Composer::class)->getMock();
         $version = $composer::VERSION;
         $repositoryManager = $this->getMockBuilder(RepositoryManager::class)
@@ -130,7 +130,7 @@ class ComposerVersionRequirementTest extends TestCase
           ->getMock();
         $composer->method('getInstallationManager')->willReturn($installationManager);
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|RootPackageInterface $package */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
         $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
         $composer->method('getPackage')->willReturn($package);
 
@@ -140,7 +140,7 @@ class ComposerVersionRequirementTest extends TestCase
         $package->expects($this->once())->method('setExtra')->with($extra);
 
         $composer->expects($this->once())->method('setLocker');
-        /** @var \PHPUnit\Framework\MockObject\MockObject|IOInterface $io */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
         $expectedMessages = [
             '<error>composer-version is not defined in extra in composer.json.</error>',
@@ -168,19 +168,19 @@ class ComposerVersionRequirementTest extends TestCase
     /**
      * @covers ::checkComposerVersion
      */
-    public function testConstraintPasses()
+    public function testConstraintPasses(): void
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject|Composer $composer */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
         $composer = $this->getMockBuilder(Composer::class)->getMock();
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|RootPackageInterface $package */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
         $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
         $composer->method('getPackage')->willReturn($package);
 
         // This matches the constraint in require-dev in composer.json.
         $package->method('getExtra')->willReturn(['composer-version' => '^2.0']);
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|IOInterface $io */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
         $io->expects($this->once())->method('writeError')->with('<info>Composer '.$composer::VERSION.' satisfies composer-version ^2.0.</info>');
 
@@ -194,18 +194,18 @@ class ComposerVersionRequirementTest extends TestCase
     /**
      * @covers ::checkComposerVersion
      */
-    public function testConstraintFails()
+    public function testConstraintFails(): void
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject|Composer $composer */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
         $composer = $this->getMockBuilder(Composer::class)->getMock();
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|RootPackageInterface $package */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
         $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
         $composer->method('getPackage')->willReturn($package);
 
         $package->method('getExtra')->willReturn(['composer-version' => '^2.9.9']);
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|IOInterface $io */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
 
         $vr = new ComposerVersionRequirement();
@@ -220,7 +220,7 @@ class ComposerVersionRequirementTest extends TestCase
     /**
      * @covers ::validate
      */
-    public function testValidate()
+    public function testValidate(): void
     {
         $vr = new ComposerVersionRequirement();
         $validator = $vr->validate();
@@ -232,7 +232,7 @@ class ComposerVersionRequirementTest extends TestCase
     /**
      * @covers ::validate
      */
-    public function testValidateFalse()
+    public function testValidateFalse(): void
     {
         $vr = new ComposerVersionRequirement();
         $validator = $vr->validate();
@@ -243,7 +243,7 @@ class ComposerVersionRequirementTest extends TestCase
     /**
      * @covers ::validate
      */
-    public function testValidateInvalid()
+    public function testValidateInvalid(): void
     {
         $vr = new ComposerVersionRequirement();
         $validator = $vr->validate();
@@ -255,12 +255,12 @@ class ComposerVersionRequirementTest extends TestCase
     /**
      * @covers ::writeConstraint
      */
-    public function testComposerJsonFileNotReadable()
+    public function testComposerJsonFileNotReadable(): void
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject|Composer $composer */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
         $composer = $this->getMockBuilder(Composer::class)->getMock();
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|RootPackageInterface $package */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
         $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
         $composer->method('getPackage')->willReturn($package);
 
@@ -269,7 +269,7 @@ class ComposerVersionRequirementTest extends TestCase
         $extra = ['composer-version' => '^'.$composer::VERSION];
         $package->expects($this->once())->method('setExtra')->with($extra);
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|IOInterface $io */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
         $io->expects($this->once())->method('writeError')->with('<error>composer-version is not defined in extra in composer.json.</error>');
         $io->expects($this->once())->method('askAndValidate')->willReturn(true);
@@ -285,12 +285,12 @@ class ComposerVersionRequirementTest extends TestCase
         $vr->checkComposerVersion($event);
     }
 
-    public function testComposerJsonFileNotWritable()
+    public function testComposerJsonFileNotWritable(): void
     {
-        /** @var \PHPUnit\Framework\MockObject\MockObject|Composer $composer */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&Composer $composer */
         $composer = $this->getMockBuilder(Composer::class)->getMock();
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|RootPackageInterface $package */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
         $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
         $composer->method('getPackage')->willReturn($package);
 
@@ -299,7 +299,7 @@ class ComposerVersionRequirementTest extends TestCase
         $extra = ['composer-version' => '^'.$composer::VERSION];
         $package->expects($this->once())->method('setExtra')->with($extra);
 
-        /** @var \PHPUnit\Framework\MockObject\MockObject|IOInterface $io */
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
         $io->expects($this->once())->method('writeError')->with('<error>composer-version is not defined in extra in composer.json.</error>');
         $io->expects($this->once())->method('askAndValidate')->willReturn(true);
