@@ -33,10 +33,16 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
         $this->io = $io;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function deactivate(Composer $composer, IOInterface $io)
     {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function uninstall(Composer $composer, IOInterface $io)
     {
     }
