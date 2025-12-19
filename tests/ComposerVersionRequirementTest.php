@@ -142,14 +142,16 @@ class ComposerVersionRequirementTest extends TestCase
         /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
         $expectedMessages = [
-            '<error>composer-version is not defined in extra in composer.json.</error>',
             '<info>Composer requirement set to ^'.$version.'.</info>',
             '<info>Composer '.$version.' satisfies composer-version ^'.$version.'.</info>',
         ];
         $callCount = 0;
         $io->expects($this->exactly(3))->method('writeError')
           ->willReturnCallback(function ($message) use (&$callCount, $expectedMessages) {
-              $this->assertEquals($expectedMessages[$callCount], $message);
+              // Skip first message (error) - already tested by testCheckNoComposerVersionInstall
+              if ($callCount > 0) {
+                  $this->assertEquals($expectedMessages[$callCount - 1], $message);
+              }
               ++$callCount;
           });
         $io->expects($this->once())->method('askAndValidate')
