@@ -64,6 +64,13 @@ class ComposerVersionRequirement implements PluginInterface, EventSubscriberInte
             return;
         }
 
+        // Handle snapshot releases (git commit hashes).
+        if (1 === preg_match('/^[0-9a-f]{40}$/i', $version)) {
+            $this->io->writeError('<warning>You are running a snapshot version of Composer ('.$version.'). The Composer version will not be enforced.</warning>');
+
+            return;
+        }
+
         $extra = $this->composer->getPackage()->getExtra();
 
         // No composer version is currently defined, offer to add it if we are
