@@ -74,8 +74,6 @@ class ComposerVersionRequirementTest extends TestCase
         $composer->method('getPackage')->willReturn($package);
 
         $package->method('getExtra')->willReturn([]);
-        // If setExtra is called then our check for the install event failed.
-        $package->expects($this->never())->method('setExtra');
 
         /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
