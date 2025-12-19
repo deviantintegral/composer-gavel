@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 $cloverPath = $argv[1] ?? 'build/logs/clover.xml';
-$threshold = 93.750;
+$threshold = 100.0;
 
 if (!file_exists($cloverPath)) {
     fwrite(STDERR, "Error: Clover XML file not found at: $cloverPath\n");
