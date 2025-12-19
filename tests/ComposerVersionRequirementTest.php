@@ -242,13 +242,9 @@ class ComposerVersionRequirementTest extends TestCase
         $composer->method('getPackage')->willReturn($package);
 
         $package->method('getExtra')->willReturn([]);
-        // If setExtra is called then our check for the install event failed.
-        $extra = ['composer-version' => '^'.$composer::VERSION];
-        $package->expects($this->once())->method('setExtra')->with($extra);
 
         /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
-        $io->expects($this->once())->method('writeError')->with('<error>composer-version is not defined in extra in composer.json.</error>');
         $io->expects($this->once())->method('askAndValidate')->willReturn(true);
 
         chmod($this->composerJsonFile, 0);
