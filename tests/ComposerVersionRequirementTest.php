@@ -111,6 +111,114 @@ class ComposerVersionRequirementTest extends TestCase
     }
 
     /**
+     * Test that snapshot releases of composer don't fail.
+     *
+     * @covers ::activate
+     * @covers ::checkComposerVersion
+     */
+    public function testCheckComposerSnapshot(): void
+    {
+        /** @var SnapshotComposer $composer */
+        $composer = new SnapshotComposer();
+
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
+        $io = $this->getMockBuilder(IOInterface::class)->getMock();
+        $io->expects($this->once())->method('writeError')->with('<warning>You are running a snapshot version of Composer (7ea15eec6c92fac66f4a5810b11b495e6ab1861b). The Composer version will not be enforced.</warning>');
+
+        $vr = new ComposerVersionRequirement();
+        $vr->activate($composer, $io);
+
+        $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
+        $vr->checkComposerVersion($event);
+    }
+
+    /**
+     * Test that uppercase snapshot releases are detected (case insensitive).
+     *
+     * @covers ::activate
+     * @covers ::checkComposerVersion
+     */
+    public function testCheckComposerSnapshotUppercase(): void
+    {
+        /** @var SnapshotComposerUppercase $composer */
+        $composer = new SnapshotComposerUppercase();
+
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
+        $io = $this->getMockBuilder(IOInterface::class)->getMock();
+        $io->expects($this->once())->method('writeError')->with('<warning>You are running a snapshot version of Composer (7EA15EEC6C92FAC66F4A5810B11B495E6AB1861B). The Composer version will not be enforced.</warning>');
+
+        $vr = new ComposerVersionRequirement();
+        $vr->activate($composer, $io);
+
+        $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
+        $vr->checkComposerVersion($event);
+    }
+
+    /**
+     * Test that a version with a prefix is not detected as a snapshot.
+     *
+     * @covers ::activate
+     * @covers ::checkComposerVersion
+     */
+    public function testCheckComposerSnapshotWithPrefixIsNotSnapshot(): void
+    {
+        /** @var SnapshotComposerWithPrefix $composer */
+        $composer = new SnapshotComposerWithPrefix();
+
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
+        $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
+        $composer->setPackage($package);
+
+        $package->method('getExtra')->willReturn(['composer-version' => '^2.0']);
+
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
+        $io = $this->getMockBuilder(IOInterface::class)->getMock();
+
+        $vr = new ComposerVersionRequirement();
+        $vr->activate($composer, $io);
+
+        $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
+
+        // This should throw because the version is not a valid snapshot
+        // (has prefix) and doesn't match semver
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid version string "v7ea15eec6c92fac66f4a5810b11b495e6ab1861b"');
+        $vr->checkComposerVersion($event);
+    }
+
+    /**
+     * Test that a version with a suffix is not detected as a snapshot.
+     *
+     * @covers ::activate
+     * @covers ::checkComposerVersion
+     */
+    public function testCheckComposerSnapshotWithSuffixIsNotSnapshot(): void
+    {
+        /** @var SnapshotComposerWithSuffix $composer */
+        $composer = new SnapshotComposerWithSuffix();
+
+        /** @var \PHPUnit\Framework\MockObject\MockObject&RootPackageInterface $package */
+        $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
+        $composer->setPackage($package);
+
+        $package->method('getExtra')->willReturn(['composer-version' => '^2.0']);
+
+        /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
+        $io = $this->getMockBuilder(IOInterface::class)->getMock();
+
+        $vr = new ComposerVersionRequirement();
+        $vr->activate($composer, $io);
+
+        $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
+
+        // This should throw because the version is not a valid snapshot
+        // (has suffix) and doesn't match semver
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid version string "7ea15eec6c92fac66f4a5810b11b495e6ab1861b-dirty"');
+        $vr->checkComposerVersion($event);
+    }
+
+    /**
      * Test that a missing version constraint during update is added.
      *
      * @covers ::activate
@@ -378,4 +486,24 @@ class ComposerVersionRequirementTest extends TestCase
 class DummyComposer extends Composer
 {
     public const VERSION = '@package_version@';
+}
+
+class SnapshotComposer extends Composer
+{
+    public const VERSION = '7ea15eec6c92fac66f4a5810b11b495e6ab1861b';
+}
+
+class SnapshotComposerUppercase extends Composer
+{
+    public const VERSION = '7EA15EEC6C92FAC66F4A5810B11B495E6AB1861B';
+}
+
+class SnapshotComposerWithPrefix extends Composer
+{
+    public const VERSION = 'v7ea15eec6c92fac66f4a5810b11b495e6ab1861b';
+}
+
+class SnapshotComposerWithSuffix extends Composer
+{
+    public const VERSION = '7ea15eec6c92fac66f4a5810b11b495e6ab1861b-dirty';
 }
