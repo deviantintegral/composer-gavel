@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "composer/composer": "^2.8",
-        "friendsofphp/php-cs-fixer": "^3.0",
+        "friendsofphp/php-cs-fixer": "3.92.3",
         "mikey179/vfsstream": "^1.6",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^11.0 || ^12.0"
