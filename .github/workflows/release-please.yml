@@ -15,7 +15,7 @@ jobs:
     name: Create Release PR
     runs-on: ubuntu-24.04
     steps:
-      - uses: googleapis/release-please-action@a02a34c4d625f9be7cb89571656e7d317b0f65b9 # v4
+      - uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4
         id: release
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
