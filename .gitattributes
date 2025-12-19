@@ -1,0 +1,16 @@
+# Exclude development files from composer package distribution
+/.github export-ignore
+/.php-cs-fixer.cache export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/.pre-commit-config.yaml export-ignore
+/.release-please-manifest.json export-ignore
+/img export-ignore
+/infection.json5 export-ignore
+/infection.phar export-ignore
+/infection.phar.asc export-ignore
+/phpstan.neon export-ignore
+/phpunit.xml.dist export-ignore
+/release-please-config.json export-ignore
+/renovate.json export-ignore
+/scripts export-ignore
+/tests export-ignore
