@@ -1,0 +1,8 @@
+{
+    "$schema": "https://raw.githubusercontent.com/infection/infection/0.31.0/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ]
+    }
+}
