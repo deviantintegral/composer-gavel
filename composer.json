@@ -27,6 +27,7 @@
         "psr-4": {"Deviantintegral\\ComposerGavel\\Tests\\": "tests"}
     },
     "extra": {
-        "class": "Deviantintegral\\ComposerGavel\\ComposerVersionRequirement"
+        "class": "Deviantintegral\\ComposerGavel\\ComposerVersionRequirement",
+        "composer-version": "^2.8.12"
     }
 }
