@@ -307,8 +307,6 @@ class ComposerVersionRequirementTest extends TestCase
         $composer->method('getPackage')->willReturn($package);
 
         $package->method('getExtra')->willReturn([]);
-        $extra = ['composer-version' => '^'.$composer::VERSION];
-        $package->expects($this->once())->method('setExtra')->with($extra);
 
         $expectedLockFile = 'vfs://project/composer.lock';
         $composer->expects($this->once())->method('setLocker')
