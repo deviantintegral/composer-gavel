@@ -1,0 +1,35 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: detect-private-key
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.0.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+  - repo: local
+    hooks:
+      - id: php-cs-fixer
+        name: PHP CS Fixer
+        entry: vendor/bin/php-cs-fixer fix
+        language: system
+        types: [php]
+        pass_filenames: false
+      - id: phpstan
+        name: PHPStan
+        entry: vendor/bin/phpstan analyse
+        language: system
+        types: [php]
+        pass_filenames: false
+      - id: phpunit
+        name: PHPUnit
+        entry: bash -c 'XDEBUG_MODE=coverage vendor/bin/phpunit --testdox'
+        language: system
+        types: [php]
+        pass_filenames: false
