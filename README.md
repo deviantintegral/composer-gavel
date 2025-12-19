@@ -4,7 +4,7 @@
 
 _I judge your Composer to be insufficent_
 
-[![CircleCI](https://circleci.com/gh/deviantintegral/composer-gavel.svg?style=svg)](https://circleci.com/gh/deviantintegral/composer-gavel) [![Maintainability](https://api.codeclimate.com/v1/badges/d5b9443b2d5daf11d34a/maintainability)](https://codeclimate.com/github/deviantintegral/composer-gavel/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/d5b9443b2d5daf11d34a/test_coverage)](https://codeclimate.com/github/deviantintegral/composer-gavel/test_coverage) [![Packagist](https://img.shields.io/packagist/dt/deviantintegral/composer-gavel.svg)](https://packagist.org/packages/deviantintegral/composer-gavel)
+[![CI](https://github.com/deviantintegral/composer-gavel/actions/workflows/ci.yml/badge.svg)](https://github.com/deviantintegral/composer-gavel/actions/workflows/ci.yml) [![Packagist](https://img.shields.io/packagist/dt/deviantintegral/composer-gavel.svg)](https://packagist.org/packages/deviantintegral/composer-gavel)
 
 ## Rationale
 
