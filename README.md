@@ -1,6 +1,12 @@
 # Composer Gavel
 
-[![Gavel](img/noun_131778_cc.png)](https://thenounproject.com/search/?q=gavel&i=131778)
+<a href="https://thenounproject.com/search/?q=gavel&i=131778">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="img/noun_131778_cc_white.png">
+    <source media="(prefers-color-scheme: light)" srcset="img/noun_131778_cc.png">
+    <img alt="Gavel" src="img/noun_131778_cc.png">
+  </picture>
+</a>
 
 _I judge your Composer to be insufficent_
 
