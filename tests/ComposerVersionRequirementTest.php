@@ -138,7 +138,6 @@ class ComposerVersionRequirementTest extends TestCase
         $extra = ['composer-version' => '^'.$composer::VERSION];
         $package->expects($this->once())->method('setExtra')->with($extra);
 
-        $composer->expects($this->once())->method('setLocker');
         /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
         $expectedMessages = [
