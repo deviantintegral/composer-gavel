@@ -12,5 +12,19 @@
       "matchCurrentVersion": "!/^0/",
       "automerge": true
     }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/actionlint\\.yml$/",
+        "/^\\.claude/hooks/SessionStart\\.sh$/"
+      ],
+      "matchStrings": [
+        "rhysd/actionlint/(?<currentValue>v[0-9.]+)/scripts/download-actionlint\\.bash"
+      ],
+      "depNameTemplate": "rhysd/actionlint",
+      "datasourceTemplate": "github-releases"
+    }
   ]
 }
