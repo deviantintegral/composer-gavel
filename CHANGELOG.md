@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/deviantintegral/composer-gavel/compare/v1.0.0...v1.0.1) (2025-12-30)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency rhysd/actionlint to v1.7.10 ([#124](https://github.com/deviantintegral/composer-gavel/issues/124)) ([ba12871](https://github.com/deviantintegral/composer-gavel/commit/ba1287186b9da8c4757d5991bf870fa37040bd70))
+
 ## [1.0.0](https://github.com/deviantintegral/composer-gavel/compare/v0.6.0...v1.0.0) (2025-12-19)
 
 
