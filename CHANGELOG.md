@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1](https://github.com/deviantintegral/composer-gavel/compare/v1.0.0...v1.0.1) (2026-01-08)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency friendsofphp/php-cs-fixer to v3.92.4 ([#126](https://github.com/deviantintegral/composer-gavel/issues/126)) ([9474cb9](https://github.com/deviantintegral/composer-gavel/commit/9474cb94105083e2666a82c6d879e65e18175ab9))
+* **deps:** update dependency friendsofphp/php-cs-fixer to v3.92.5 ([#127](https://github.com/deviantintegral/composer-gavel/issues/127)) ([949774f](https://github.com/deviantintegral/composer-gavel/commit/949774f870c3a084446da230b892ea1d36cfbfb9))
+* **deps:** update dependency rhysd/actionlint to v1.7.10 ([#124](https://github.com/deviantintegral/composer-gavel/issues/124)) ([ba12871](https://github.com/deviantintegral/composer-gavel/commit/ba1287186b9da8c4757d5991bf870fa37040bd70))
+
 ## [1.0.0](https://github.com/deviantintegral/composer-gavel/compare/v0.6.0...v1.0.0) (2025-12-19)
 
 
