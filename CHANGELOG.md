@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.1](https://github.com/deviantintegral/composer-gavel/compare/v1.0.0...v1.0.1) (2026-01-20)
+
+
+### Miscellaneous Chores
+
+* **config:** migrate config renovate.json ([aac3d1b](https://github.com/deviantintegral/composer-gavel/commit/aac3d1bdefc18bf2f84cfe20f7fad7fba49d56fb))
+* **deps:** update actions/cache digest to 8b402f5 ([#128](https://github.com/deviantintegral/composer-gavel/issues/128)) ([ab59711](https://github.com/deviantintegral/composer-gavel/commit/ab59711eaab2f07aa4f6efc24bae3753fdc2bd2f))
+* **deps:** update dependency friendsofphp/php-cs-fixer to v3.92.4 ([#126](https://github.com/deviantintegral/composer-gavel/issues/126)) ([9474cb9](https://github.com/deviantintegral/composer-gavel/commit/9474cb94105083e2666a82c6d879e65e18175ab9))
+* **deps:** update dependency friendsofphp/php-cs-fixer to v3.92.5 ([#127](https://github.com/deviantintegral/composer-gavel/issues/127)) ([949774f](https://github.com/deviantintegral/composer-gavel/commit/949774f870c3a084446da230b892ea1d36cfbfb9))
+* **deps:** update dependency rhysd/actionlint to v1.7.10 ([#124](https://github.com/deviantintegral/composer-gavel/issues/124)) ([ba12871](https://github.com/deviantintegral/composer-gavel/commit/ba1287186b9da8c4757d5991bf870fa37040bd70))
+* **deps:** update ggilder/codecoverage digest to ae4850f ([#130](https://github.com/deviantintegral/composer-gavel/issues/130)) ([98472af](https://github.com/deviantintegral/composer-gavel/commit/98472afad1f30cf214ade4b82cc5a9a1d8967593))
+* **renovate:** add prCreation and internalChecksFilter settings ([0df0c8a](https://github.com/deviantintegral/composer-gavel/commit/0df0c8a76e0139bc4ceff359f91c7b8651650db9))
+* **renovate:** auto-merge all updates after 3 days ([97936e9](https://github.com/deviantintegral/composer-gavel/commit/97936e9301394e9d678e5e9dc5d8ab9736a84018))
+
 ## [1.0.0](https://github.com/deviantintegral/composer-gavel/compare/v0.6.0...v1.0.0) (2025-12-19)
 
 
