@@ -3,6 +3,8 @@
   "extends": [
     "config:recommended"
   ],
+  "prCreation": "not-pending",
+  "internalChecksFilter": "strict",
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
