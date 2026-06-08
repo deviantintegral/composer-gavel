@@ -318,7 +318,12 @@ class ComposerVersionRequirementTest extends TestCase
         $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
         $composer->method('getPackage')->willReturn($package);
 
-        $package->method('getExtra')->willReturn(['composer-version' => '^2.9.9']);
+        // Derive the constraint from the running Composer version so the test
+        // never accidentally passes once Composer releases a newer version. A
+        // running version can never satisfy a "greater than itself" constraint.
+        $version = $composer::VERSION;
+        $constraint = '> '.$version;
+        $package->method('getExtra')->willReturn(['composer-version' => $constraint]);
 
         /** @var \PHPUnit\Framework\MockObject\MockObject&IOInterface $io */
         $io = $this->getMockBuilder(IOInterface::class)->getMock();
@@ -328,7 +333,7 @@ class ComposerVersionRequirementTest extends TestCase
 
         $event = new Event(ScriptEvents::PRE_INSTALL_CMD, $composer, $io);
         $this->expectException(ConstraintException::class);
-        $this->expectExceptionMessage('Composer '.$composer::VERSION.' is in use but this project requires Composer ^2.9.9. Upgrade composer by running composer self-update.');
+        $this->expectExceptionMessage('Composer '.$version.' is in use but this project requires Composer '.$constraint.'. Upgrade composer by running composer self-update.');
         $vr->checkComposerVersion($event);
     }
 
